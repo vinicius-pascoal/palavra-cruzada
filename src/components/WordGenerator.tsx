@@ -1,68 +1,53 @@
-// components/WordGenerator.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 
-type WordData = {
+type WordDefinition = {
   word: string;
   definition: string;
 };
 
 type Props = {
-  onReady: (data: WordData) => void;
+  onReady: (data: WordDefinition[]) => void;
+  count?: number;
 };
 
-const WordGenerator = ({ onReady }: Props) => {
-  const [loading, setLoading] = useState(true);
-
+const WordGenerator = ({ onReady, count = 5 }: Props) => {
   useEffect(() => {
-    const fetchValidWordAndDefinition = async () => {
-      setLoading(true);
-      let validWord = null;
-      let validDefinition = null;
+    const fetchWords = async () => {
+      const collected: WordDefinition[] = [];
 
-      while (!validWord || !validDefinition) {
+      while (collected.length < count) {
         try {
-          const wordRes = await axios.get('https://random-word-api.herokuapp.com/word');
-          const candidateWord = wordRes.data[0];
+          const res = await axios.get('https://random-word-api.herokuapp.com/word?number=1');
+          const word = res.data[0];
 
           try {
-            const defRes = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${candidateWord}`);
-            const definitions = defRes.data?.[0]?.meanings?.[0]?.definitions;
+            const defRes = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+            const defs = defRes.data?.[0]?.meanings?.[0]?.definitions;
 
-            if (definitions && definitions.length > 0) {
-              validWord = candidateWord;
-              validDefinition = definitions[0].definition;
-            } else {
-              console.log(`No definition for "${candidateWord}". Retrying...`);
+            if (defs && defs.length > 0) {
+              collected.push({
+                word,
+                definition: defs[0].definition,
+              });
             }
           } catch {
-            console.log(`No dictionary entry for "${candidateWord}". Retrying...`);
+            // Skip if definition doesn't exist
           }
-
-        } catch (err) {
-          console.error('Word API failed.', err);
-          break;
+        } catch {
+          // Network fail, skip and retry
         }
       }
 
-      if (validWord && validDefinition) {
-        onReady({ word: validWord, definition: validDefinition });
-      }
-
-      setLoading(false);
+      onReady(collected);
     };
 
-    fetchValidWordAndDefinition();
-  }, [onReady]);
+    fetchWords();
+  }, [onReady, count]);
 
-  return (
-    <div className="text-gray-500 text-lg animate-pulse text-center">
-      Loading valid word...
-    </div>
-  );
+  return <div className="text-gray-600 text-lg animate-pulse text-center">Loading crossword words…</div>;
 };
 
 export default WordGenerator;
-
