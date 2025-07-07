@@ -18,10 +18,13 @@ export default function CrosswordPage() {
   const [placedWords, setPlacedWords] = useState<PlacedWord[]>([]);
   const [input, setInput] = useState('');
   const [complete, setComplete] = useState(false);
+  const [guessFeedback, setGuessFeedback] = useState('');
 
   const handleWordsReady = (words: { word: string; definition: string }[]) => {
     const size = 15;
-    const newGrid = Array(size).fill(null).map(() => Array(size).fill(''));
+    const newGrid = Array(size)
+      .fill(null)
+      .map(() => Array(size).fill(''));
     const newPlaced: PlacedWord[] = [];
 
     const [main, ...rest] = words;
@@ -77,11 +80,26 @@ export default function CrosswordPage() {
     const guess = input.trim().toLowerCase();
     if (!guess) return;
 
-    const updated = placedWords.map((w) =>
-      w.word.toLowerCase() === guess ? { ...w, revealed: true } : w
-    );
+    let found = false;
+
+    const updated = placedWords.map((w) => {
+      if (w.word.toLowerCase() === guess) {
+        found = true;
+        return { ...w, revealed: true };
+      }
+      return w;
+    });
+
     setPlacedWords(updated);
     setInput('');
+
+    if (found) {
+      setGuessFeedback('✅ Correct!');
+    } else {
+      setGuessFeedback('❌ Incorrect guess.');
+    }
+
+    setTimeout(() => setGuessFeedback(''), 1500);
 
     if (updated.every((w) => w.revealed)) {
       setComplete(true);
@@ -90,22 +108,35 @@ export default function CrosswordPage() {
 
   return (
     <div className="min-h-screen p-4 bg-gradient-to-br from-gray-800 to-gray-600 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-4">🧩 Crossword Game</h1>
+      <h1 className="text-3xl font-bold text-white mb-4">🧩 Crossword Game</h1>
 
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
         <>
           {/* Grid */}
-          <div className="grid grid-cols-15 gap-1 mb-6" style={{ fontFamily: 'monospace' }}>
+          <div
+            className="grid gap-[2px] mb-6"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${grid[0].length}, 2rem)`,
+              fontFamily: 'monospace',
+            }}
+          >
             {grid.map((row, r) =>
               row.map((cell, c) => {
                 const match = placedWords.some((w) => {
                   if (!w.revealed) return false;
-                  const idx = w.word.indexOf(cell);
-                  if (idx === -1) return false;
-                  if (w.direction === 'across') return r === w.row && c === w.col + idx;
-                  if (w.direction === 'down') return c === w.col && r === w.row + idx;
+                  for (let i = 0; i < w.word.length; i++) {
+                    if (w.word[i] !== cell) continue;
+
+                    if (
+                      (w.direction === 'across' && r === w.row && c === w.col + i) ||
+                      (w.direction === 'down' && c === w.col && r === w.row + i)
+                    ) {
+                      return true;
+                    }
+                  }
                   return false;
                 });
 
@@ -113,7 +144,7 @@ export default function CrosswordPage() {
                   <div
                     key={`${r}-${c}`}
                     className={clsx(
-                      'w-8 h-8 border text-center text-xl uppercase text-black ',
+                      'w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center',
                       cell
                         ? match
                           ? 'bg-green-200 border-green-500'
@@ -129,11 +160,18 @@ export default function CrosswordPage() {
           </div>
 
           {/* Clues */}
-          <div className="mb-6 w-full max-w-md text-left space-y-2 text-sm">
-            <h2 className="font-semibold text-gray-700">Clues:</h2>
+          <div className="mb-6 w-full max-w-md text-left space-y-2 text-sm bg-white/10 p-4 rounded text-white">
+            <h2 className="font-semibold text-white mb-2">Clues:</h2>
             {placedWords.map((w, i) => (
-              <div key={i}>
-                <span className="font-bold">{w.direction.toUpperCase()}:</span> {w.definition}
+              <div
+                key={i}
+                className={clsx(
+                  'p-1 rounded',
+                  w.revealed ? 'text-green-400' : 'text-white'
+                )}
+              >
+                <span className="font-bold">{i + 1}. {w.direction.toUpperCase()}:</span>{' '}
+                {w.definition}
               </div>
             ))}
           </div>
@@ -155,8 +193,29 @@ export default function CrosswordPage() {
             </button>
           </form>
 
+          {/* Feedback */}
+          {guessFeedback && (
+            <div className="mt-2 text-white text-lg font-semibold">{guessFeedback}</div>
+          )}
+
+          {/* Completion */}
           {complete && (
-            <div className="mt-4 text-green-600 font-bold text-xl">🎉 You solved the crossword!</div>
+            <div className="mt-6 flex flex-col items-center space-y-2">
+              <div className="text-green-400 font-bold text-xl">
+                🎉 You solved the crossword!
+              </div>
+              <button
+                onClick={() => {
+                  setGrid(null);
+                  setPlacedWords([]);
+                  setComplete(false);
+                  setInput('');
+                }}
+                className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800"
+              >
+                🔁 Play Again
+              </button>
+            </div>
           )}
         </>
       )}
