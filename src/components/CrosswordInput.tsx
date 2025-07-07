@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 export default function CrosswordInput({
   input,
   setInput,
@@ -11,9 +13,16 @@ export default function CrosswordInput({
   onSubmit: (e: React.FormEvent) => void;
   feedback: string;
 }) {
+  const isError = feedback.includes("Incorrect");
+
   return (
     <>
-      <form onSubmit={onSubmit} className="flex gap-2">
+      <motion.form
+        onSubmit={onSubmit}
+        className="flex gap-2"
+        animate={isError ? { x: [-5, 5, -5, 5, 0] } : { x: 0 }}
+        transition={{ duration: 0.4 }}
+      >
         <input
           type="text"
           value={input}
@@ -27,8 +36,17 @@ export default function CrosswordInput({
         >
           Submit
         </button>
-      </form>
-      {feedback && <div className="mt-2 text-white text-lg font-semibold">{feedback}</div>}
+      </motion.form>
+      {feedback && (
+        <motion.div
+          className="mt-2 text-white text-lg font-semibold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {feedback.includes("Correct") ? "🎉 " : "❌ "}{feedback}
+        </motion.div>
+      )}
     </>
   );
 }

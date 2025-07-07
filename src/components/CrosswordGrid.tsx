@@ -1,6 +1,7 @@
 "use client";
 
 import clsx from "clsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 type PlacedWord = {
   word: string;
@@ -71,19 +72,24 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
               });
 
               return (
-                <div
-                  key={`${r}-${c}`}
-                  className={clsx(
-                    "w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center",
-                    cell
-                      ? match
-                        ? "bg-green-200 border-green-500"
-                        : "bg-gray-200 border-gray-400"
-                      : "bg-transparent border-none"
-                  )}
-                >
-                  {match ? cell : ""}
-                </div>
+                <AnimatePresence key={`${r}-${c}`}>
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className={clsx(
+                      "w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center",
+                      cell
+                        ? match
+                          ? "bg-green-200 border-green-500"
+                          : "bg-gray-200 border-gray-400"
+                        : "bg-transparent border-none"
+                    )}
+                  >
+                    {match ? cell : ""}
+                  </motion.div>
+                </AnimatePresence>
               );
             })}
           </>
