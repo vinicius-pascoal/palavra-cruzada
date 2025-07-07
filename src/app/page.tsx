@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import WordGenerator from '../components/WordGenerator';
-import clsx from 'clsx';
+import CrosswordGrid from '../components/CrosswordGrid';
+import CrosswordClues from '../components/CrosswordClues';
+import CrosswordInput from '../components/CrosswordInput';
 
 type PlacedWord = {
   word: string;
@@ -22,9 +24,7 @@ export default function CrosswordPage() {
 
   const handleWordsReady = (words: { word: string; definition: string }[]) => {
     const size = 15;
-    const newGrid = Array(size)
-      .fill(null)
-      .map(() => Array(size).fill(''));
+    const newGrid = Array(size).fill(null).map(() => Array(size).fill(''));
     const newPlaced: PlacedWord[] = [];
 
     const [main, ...rest] = words;
@@ -32,7 +32,6 @@ export default function CrosswordPage() {
     const startCol = Math.floor((size - main.word.length) / 2);
     console.log(main.word)
 
-    // Place first word horizontally
     newPlaced.push({
       ...main,
       row: startRow,
@@ -44,7 +43,6 @@ export default function CrosswordPage() {
       newGrid[startRow][startCol + i] = main.word[i];
     }
 
-    // Place other words vertically, with safety check
     rest.forEach(({ word, definition }) => {
       for (let i = 0; i < word.length; i++) {
         const letter = word[i];
@@ -105,10 +103,9 @@ export default function CrosswordPage() {
 
     setPlacedWords(updated);
     setInput('');
-
     setGuessFeedback(found ? '✅ Correct!' : '❌ Incorrect guess.');
-    setTimeout(() => setGuessFeedback(''), 1500);
 
+    setTimeout(() => setGuessFeedback(''), 1500);
     if (updated.every((w) => w.revealed)) {
       setComplete(true);
     }
@@ -122,119 +119,14 @@ export default function CrosswordPage() {
 
       {grid && (
         <>
-          {/** 🧠 Check if grid has any letters */}
-          {grid && grid.some((row) => row.some((cell) => cell !== '')) && (
-            <div className="overflow-auto mb-6">
-              <div
-                className="grid gap-[2px]"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `1.5rem repeat(${grid[0].length}, 2rem)`,
-                  fontFamily: 'monospace',
-                }}
-              >
-                {/* Column Headers */}
-                <div />
-                {grid[0].map((_, colIdx) => (
-                  <div
-                    key={`col-${colIdx}`}
-                    className="w-8 h-8 text-center text-xs text-white font-bold"
-                  >
-                    {String.fromCharCode(65 + colIdx)}
-                  </div>
-                ))}
-
-                {/* Rows */}
-                {grid.map((row, r) => (
-                  <>
-                    {/* Row Header */}
-                    <div
-                      key={`row-${r}`}
-                      className="w-6 h-8 text-right pr-[2px] text-xs text-white font-bold"
-                    >
-                      {r + 1}
-                    </div>
-                    {row.map((cell, c) => {
-                      const match = placedWords.some((w) => {
-                        if (!w.revealed) return false;
-                        for (let i = 0; i < w.word.length; i++) {
-                          if (w.word[i] !== cell) continue;
-                          if (
-                            (w.direction === 'across' && r === w.row && c === w.col + i) ||
-                            (w.direction === 'down' && c === w.col && r === w.row + i)
-                          ) {
-                            return true;
-                          }
-                        }
-                        return false;
-                      });
-
-                      return (
-                        <div
-                          key={`${r}-${c}`}
-                          className={clsx(
-                            'w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center',
-                            cell
-                              ? match
-                                ? 'bg-green-200 border-green-500'
-                                : 'bg-gray-200 border-gray-400'
-                              : 'bg-transparent border-none'
-                          )}
-                        >
-                          {match ? cell : ''}
-                        </div>
-                      );
-                    })}
-                  </>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Clues */}
-          <div className="mb-6 w-full max-w-md text-left space-y-2 text-sm bg-white/10 p-4 rounded text-white">
-            <h2 className="font-semibold text-white mb-2">Clues:</h2>
-            {placedWords.map((w, i) => (
-              <div
-                key={i}
-                className={clsx(
-                  'p-1 rounded',
-                  w.revealed ? 'text-green-400' : 'text-white'
-                )}
-              >
-                <span className="font-bold">
-                  {i + 1}. {w.direction.toUpperCase()} @{' '}
-                  {String.fromCharCode(65 + w.col)}
-                  {w.row + 1}
-                </span>
-                : {w.definition}
-              </div>
-            ))}
-          </div>
-
-          {/* Guess input */}
-          <form onSubmit={handleGuess} className="flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="border px-3 py-1 rounded text-lg"
-              placeholder="Guess full word..."
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-            >
-              Submit
-            </button>
-          </form>
-
-          {/* Feedback */}
-          {guessFeedback && (
-            <div className="mt-2 text-white text-lg font-semibold">{guessFeedback}</div>
-          )}
-
-          {/* Completion */}
+          <CrosswordGrid grid={grid} placedWords={placedWords} />
+          <CrosswordClues placedWords={placedWords} />
+          <CrosswordInput
+            input={input}
+            setInput={setInput}
+            onSubmit={handleGuess}
+            feedback={guessFeedback}
+          />
           {complete && (
             <div className="mt-6 flex flex-col items-center space-y-2">
               <div className="text-green-400 font-bold text-xl">
