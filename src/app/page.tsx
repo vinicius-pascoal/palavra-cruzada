@@ -44,29 +44,47 @@ export default function CrosswordPage() {
       newGrid[startRow][startCol + i] = main.word[i];
     }
 
-    // Try to cross other words on shared letters
+    // Try to cross other words on shared letters safely
     rest.forEach(({ word, definition }) => {
       for (let i = 0; i < word.length; i++) {
-        console.log(word)
         const letter = word[i];
         const matchIndex = main.word.indexOf(letter);
-        if (matchIndex !== -1) {
-          const col = startCol + matchIndex;
-          const row = startRow - i;
-          if (row >= 0 && row + word.length <= size) {
-            for (let j = 0; j < word.length; j++) {
-              newGrid[row + j][col] = word[j];
-            }
-            newPlaced.push({
-              word,
-              definition,
-              row,
-              col,
-              direction: 'down',
-              revealed: false,
-            });
-            return;
+        if (matchIndex === -1) continue;
+
+        const col = startCol + matchIndex;
+        const row = startRow - i;
+
+        if (row < 0 || row + word.length > size) continue;
+
+        let canPlace = true;
+
+        for (let j = 0; j < word.length; j++) {
+          const targetRow = row + j;
+          const targetCell = newGrid[targetRow][col];
+
+          // Allow only if empty or same letter
+          if (targetCell && targetCell !== word[j]) {
+            canPlace = false;
+            break;
           }
+        }
+
+        if (canPlace) {
+          console.log(word)
+          for (let j = 0; j < word.length; j++) {
+            newGrid[row + j][col] = word[j];
+          }
+
+          newPlaced.push({
+            word,
+            definition,
+            row,
+            col,
+            direction: 'down',
+            revealed: false,
+          });
+
+          return; // word placed successfully
         }
       }
     });
