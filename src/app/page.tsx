@@ -44,7 +44,7 @@ export default function CrosswordPage() {
       newGrid[startRow][startCol + i] = main.word[i];
     }
 
-    // Try to cross other words on shared letters safely
+    // Place other words vertically, with safety check
     rest.forEach(({ word, definition }) => {
       for (let i = 0; i < word.length; i++) {
         const letter = word[i];
@@ -57,12 +57,9 @@ export default function CrosswordPage() {
         if (row < 0 || row + word.length > size) continue;
 
         let canPlace = true;
-
         for (let j = 0; j < word.length; j++) {
           const targetRow = row + j;
           const targetCell = newGrid[targetRow][col];
-
-          // Allow only if empty or same letter
           if (targetCell && targetCell !== word[j]) {
             canPlace = false;
             break;
@@ -74,7 +71,6 @@ export default function CrosswordPage() {
           for (let j = 0; j < word.length; j++) {
             newGrid[row + j][col] = word[j];
           }
-
           newPlaced.push({
             word,
             definition,
@@ -83,8 +79,7 @@ export default function CrosswordPage() {
             direction: 'down',
             revealed: false,
           });
-
-          return; // word placed successfully
+          return;
         }
       }
     });
@@ -111,12 +106,7 @@ export default function CrosswordPage() {
     setPlacedWords(updated);
     setInput('');
 
-    if (found) {
-      setGuessFeedback('✅ Correct!');
-    } else {
-      setGuessFeedback('❌ Incorrect guess.');
-    }
-
+    setGuessFeedback(found ? '✅ Correct!' : '❌ Incorrect guess.');
     setTimeout(() => setGuessFeedback(''), 1500);
 
     if (updated.every((w) => w.revealed)) {
@@ -132,50 +122,74 @@ export default function CrosswordPage() {
 
       {grid && (
         <>
-          {/* Grid */}
-          <div
-            className="grid gap-[2px] mb-6"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${grid[0].length}, 2rem)`,
-              fontFamily: 'monospace',
-            }}
-          >
-            {grid.map((row, r) =>
-              row.map((cell, c) => {
-                const match = placedWords.some((w) => {
-                  if (!w.revealed) return false;
-                  for (let i = 0; i < w.word.length; i++) {
-                    if (w.word[i] !== cell) continue;
-
-                    if (
-                      (w.direction === 'across' && r === w.row && c === w.col + i) ||
-                      (w.direction === 'down' && c === w.col && r === w.row + i)
-                    ) {
-                      return true;
-                    }
-                  }
-                  return false;
-                });
-
-                return (
+          {/** 🧠 Check if grid has any letters */}
+          {grid && grid.some((row) => row.some((cell) => cell !== '')) && (
+            <div className="overflow-auto mb-6">
+              <div
+                className="grid gap-[2px]"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: `1.5rem repeat(${grid[0].length}, 2rem)`,
+                  fontFamily: 'monospace',
+                }}
+              >
+                {/* Column Headers */}
+                <div />
+                {grid[0].map((_, colIdx) => (
                   <div
-                    key={`${r}-${c}`}
-                    className={clsx(
-                      'w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center',
-                      cell
-                        ? match
-                          ? 'bg-green-200 border-green-500'
-                          : 'bg-gray-200 border-gray-400'
-                        : 'bg-transparent border-none'
-                    )}
+                    key={`col-${colIdx}`}
+                    className="w-8 h-8 text-center text-xs text-white font-bold"
                   >
-                    {match ? cell : ''}
+                    {String.fromCharCode(65 + colIdx)}
                   </div>
-                );
-              })
-            )}
-          </div>
+                ))}
+
+                {/* Rows */}
+                {grid.map((row, r) => (
+                  <>
+                    {/* Row Header */}
+                    <div
+                      key={`row-${r}`}
+                      className="w-6 h-8 text-right pr-[2px] text-xs text-white font-bold"
+                    >
+                      {r + 1}
+                    </div>
+                    {row.map((cell, c) => {
+                      const match = placedWords.some((w) => {
+                        if (!w.revealed) return false;
+                        for (let i = 0; i < w.word.length; i++) {
+                          if (w.word[i] !== cell) continue;
+                          if (
+                            (w.direction === 'across' && r === w.row && c === w.col + i) ||
+                            (w.direction === 'down' && c === w.col && r === w.row + i)
+                          ) {
+                            return true;
+                          }
+                        }
+                        return false;
+                      });
+
+                      return (
+                        <div
+                          key={`${r}-${c}`}
+                          className={clsx(
+                            'w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center',
+                            cell
+                              ? match
+                                ? 'bg-green-200 border-green-500'
+                                : 'bg-gray-200 border-gray-400'
+                              : 'bg-transparent border-none'
+                          )}
+                        >
+                          {match ? cell : ''}
+                        </div>
+                      );
+                    })}
+                  </>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Clues */}
           <div className="mb-6 w-full max-w-md text-left space-y-2 text-sm bg-white/10 p-4 rounded text-white">
@@ -188,8 +202,12 @@ export default function CrosswordPage() {
                   w.revealed ? 'text-green-400' : 'text-white'
                 )}
               >
-                <span className="font-bold">{i + 1}. {w.direction.toUpperCase()}:</span>{' '}
-                {w.definition}
+                <span className="font-bold">
+                  {i + 1}. {w.direction.toUpperCase()} @{' '}
+                  {String.fromCharCode(65 + w.col)}
+                  {w.row + 1}
+                </span>
+                : {w.definition}
               </div>
             ))}
           </div>
