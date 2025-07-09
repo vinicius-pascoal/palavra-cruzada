@@ -104,7 +104,7 @@ export default function CrosswordPage() {
 
     setPlacedWords(updated);
     setInput('');
-    setGuessFeedback(found ? '✅ Correct!' : '❌ Incorrect guess.');
+    setGuessFeedback(found ? ' Correct!' : 'Incorrect guess.');
 
     setTimeout(() => setGuessFeedback(''), 1500);
     if (updated.every((w) => w.revealed)) {
@@ -119,7 +119,7 @@ export default function CrosswordPage() {
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
-        <div className='flex items-center space-y-4'>
+        <div className='flex items-center flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 w-screen'>
           <div className='bg-white/10 p-4 rounded  mr-5 shadow-lg shadow-gray-900/50 '>
           <CrosswordGrid grid={grid} placedWords={placedWords}/>
           </div>

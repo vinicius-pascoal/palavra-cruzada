@@ -39,12 +39,13 @@ export default function CrosswordInput({
       </motion.form>
       {feedback && (
         <motion.div
-          className="mt-2 text-white text-lg font-semibold"
+          style={{ color: feedback.includes("Correct") ? "green" : "red" }}
+          className="mt-2 text-lg font-semibold"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          {feedback.includes("Correct") ? "🎉 " : "❌ "}{feedback}
+          {feedback.includes("Correct") ? "✅" : "❌ "}{feedback}
         </motion.div>
       )}
     </div>
