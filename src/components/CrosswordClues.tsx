@@ -17,7 +17,7 @@ export default function CrosswordClues({ placedWords }: { placedWords: any[] }) 
             className={clsx("p-1 rounded", w.revealed ? "text-green-400" : "text-white")}
           >
             <span className="font-bold">
-              {i + 1}. {w.direction.toUpperCase()} @ {String.fromCharCode(65 + w.col)}
+              {w.direction.toUpperCase()} {String.fromCharCode(65 + w.col)}
               {w.row + 1}
             </span>
             : {w.definition}

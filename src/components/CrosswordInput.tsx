@@ -28,7 +28,7 @@ export default function CrosswordInput({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="border px-3 py-1 rounded text-lg"
-          placeholder="Guess full word..."
+          placeholder="Guess..."
         />
         <button
           type="submit"

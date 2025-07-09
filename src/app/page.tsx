@@ -5,6 +5,7 @@ import WordGenerator from '../components/WordGenerator';
 import CrosswordGrid from '../components/CrosswordGrid';
 import CrosswordClues from '../components/CrosswordClues';
 import CrosswordInput from '../components/CrosswordInput';
+import Background from '../components/Background';
 
 type PlacedWord = {
   word: string;
@@ -112,14 +113,17 @@ export default function CrosswordPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-gray-800 to-gray-600 flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-white mb-4">🧩 Crossword Game</h1>
+    <Background >
+      <h1 className="text-3xl font-bold text-white mb-4">Crossword Game</h1>
 
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
-        <>
-          <CrosswordGrid grid={grid} placedWords={placedWords} />
+        <div className='flex items-center space-y-4'>
+          <div className='bg-white/10 p-4 rounded  mr-5'>
+          <CrosswordGrid grid={grid} placedWords={placedWords}/>
+          </div>
+          <div>
           <CrosswordClues placedWords={placedWords} />
           <CrosswordInput
             input={input}
@@ -145,8 +149,9 @@ export default function CrosswordPage() {
               </button>
             </div>
           )}
-        </>
+          </div>
+        </div>
       )}
-    </div>
+    </Background>
   );
 }
