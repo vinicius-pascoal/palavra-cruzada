@@ -16,10 +16,10 @@ export default function CrosswordInput({
   const isError = feedback.includes("Incorrect");
 
   return (
-    <>
+    <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex flex-col items-center shadow-lg shadow-gray-900/50 ">
       <motion.form
         onSubmit={onSubmit}
-        className="flex gap-2"
+        className="flex "
         animate={isError ? { x: [-5, 5, -5, 5, 0] } : { x: 0 }}
         transition={{ duration: 0.4 }}
       >
@@ -27,12 +27,12 @@ export default function CrosswordInput({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="border px-3 py-1 rounded text-lg"
+          className="border border-gray-800 border-r-0 px-3 py-1 text-lg rounded-l"
           placeholder="Guess..."
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-1 rounded-r hover:bg-blue-700"
         >
           Submit
         </button>
@@ -47,6 +47,6 @@ export default function CrosswordInput({
           {feedback.includes("Correct") ? "🎉 " : "❌ "}{feedback}
         </motion.div>
       )}
-    </>
+    </div>
   );
 }

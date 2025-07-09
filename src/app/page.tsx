@@ -114,13 +114,13 @@ export default function CrosswordPage() {
 
   return (
     <Background >
-      <h1 className="text-3xl font-bold text-white mb-4">Crossword Game</h1>
+      <h1 className="text-3xl font-bold text-white mb-10">Crossword Game</h1>
 
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
         <div className='flex items-center space-y-4'>
-          <div className='bg-white/10 p-4 rounded  mr-5'>
+          <div className='bg-white/10 p-4 rounded  mr-5 shadow-lg shadow-gray-900/50 '>
           <CrosswordGrid grid={grid} placedWords={placedWords}/>
           </div>
           <div>
@@ -134,7 +134,7 @@ export default function CrosswordPage() {
           {complete && (
             <div className="mt-6 flex flex-col items-center space-y-2">
               <div className="text-green-400 font-bold text-xl">
-                🎉 You solved the crossword!
+                You solved the crossword!
               </div>
               <button
                 onClick={() => {
@@ -145,7 +145,7 @@ export default function CrosswordPage() {
                 }}
                 className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800"
               >
-                🔁 Play Again
+                Play Again
               </button>
             </div>
           )}
