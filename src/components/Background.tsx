@@ -12,7 +12,7 @@ const Background: React.FC<{ children: React.ReactNode }> = ({
       <div className="absolute inset-0 z-0">
         <Image
           src={noise}
-          alt="Granite Background"
+          alt="Background"
           layout="fill"
           objectFit="cover"
           className=""
