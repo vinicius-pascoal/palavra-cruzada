@@ -16,7 +16,7 @@ export default function CrosswordInput({
   const isError = feedback.includes("Incorrect");
 
   return (
-    <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex flex-col items-center shadow-lg shadow-gray-900/50 ">
+    <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex flex-col items-center shadow-lg shadow-gray-900/50">
       <motion.form
         onSubmit={onSubmit}
         className="flex "

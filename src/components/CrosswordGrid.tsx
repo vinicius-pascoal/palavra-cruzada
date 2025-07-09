@@ -47,7 +47,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
         )}
 
         {grid.map((row, r) => (
-          <>
+          <> 
             {hasLetters && (
               <div
                 key={`row-${r}`}
@@ -79,10 +79,10 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     className={clsx(
-                      "w-8 h-8 border text-center text-xl uppercase text-black flex items-center justify-center",
+                      "w-8 h-8 border text-center text-xl uppercase text-gray-600 flex items-center justify-center",
                       cell
                         ? match
-                          ? "bg-green-200 border-green-500"
+                          ? "bg-green-300 border-green-500"
                           : "bg-gray-200 border-gray-400"
                         : "bg-transparent border-none"
                     )}
