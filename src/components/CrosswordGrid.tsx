@@ -47,11 +47,11 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
         )}
 
         {grid.map((row, r) => (
-          <> 
+          <>
             {hasLetters && (
               <div
                 key={`row-${r}`}
-                className="w-6 h-8 text-right pr-[2px] text-xs text-white font-bold"
+                className="w-6 h-8 text-right pr-2 text-xs text-white font-bold"
               >
                 {r + 1}
               </div>
@@ -82,9 +82,9 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
                       "w-8 h-8 border text-center text-xl uppercase text-gray-600 flex items-center justify-center",
                       cell
                         ? match
-                          ? "bg-green-300 border-green-500"
-                          : "bg-gray-200 border-gray-400"
-                        : "bg-transparent border-none"
+                          ? "border-green-500 text-green-500"
+                          : "border-gray-400"
+                        : "bg-transparent "
                     )}
                   >
                     {match ? cell : ""}
