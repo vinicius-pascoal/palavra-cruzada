@@ -1,44 +1,65 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import WordGenerator from '../components/WordGenerator';
-import CrosswordGrid from '../components/CrosswordGrid';
-import CrosswordClues from '../components/CrosswordClues';
-import CrosswordInput from '../components/CrosswordInput';
-import Background from '../components/Background';
-import Pontuation from '../components/Pontuation';
+import { useState, useEffect } from "react";
+import WordGenerator from "../components/WordGenerator";
+import CrosswordGrid from "../components/CrosswordGrid";
+import CrosswordClues from "../components/CrosswordClues";
+import CrosswordInput from "../components/CrosswordInput";
+import Background from "../components/Background";
+import Pontuation from "../components/Pontuation";
 
 type PlacedWord = {
   word: string;
   definition: string;
   row: number;
   col: number;
-  direction: 'across' | 'down';
+  direction: "across" | "down";
   revealed: boolean;
 };
 
 export default function CrosswordPage() {
   const [grid, setGrid] = useState<string[][] | null>(null);
   const [placedWords, setPlacedWords] = useState<PlacedWord[]>([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [complete, setComplete] = useState(false);
-  const [guessFeedback, setGuessFeedback] = useState('');
+  const [guessFeedback, setGuessFeedback] = useState("");
+  const [score, setScore] = useState(0);
+
+  useEffect(() => {
+    const storedScore = localStorage.getItem("score");
+    if (storedScore) setScore(Number(storedScore));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("score", score.toString());
+  }, [score]);
+  const updateScore = () => {
+    setScore((prev) => prev + 1);
+  };
+  const resetScore = () => {
+    setScore(0);
+  };
+  const getScore = () => {
+    return score;
+  };
 
   const handleWordsReady = (words: { word: string; definition: string }[]) => {
     const size = 15;
-    const newGrid = Array(size).fill(null).map(() => Array(size).fill(''));
+    const newGrid = Array(size)
+      .fill(null)
+      .map(() => Array(size).fill(""));
     const newPlaced: PlacedWord[] = [];
 
     const [main, ...rest] = words;
     const startRow = 7;
     const startCol = Math.floor((size - main.word.length) / 2);
-    console.log(main.word)
+    console.log(main.word);
 
     newPlaced.push({
       ...main,
       row: startRow,
       col: startCol,
-      direction: 'across',
+      direction: "across",
       revealed: false,
     });
     for (let i = 0; i < main.word.length; i++) {
@@ -67,7 +88,7 @@ export default function CrosswordPage() {
         }
 
         if (canPlace) {
-          console.log(word)
+          console.log(word);
           for (let j = 0; j < word.length; j++) {
             newGrid[row + j][col] = word[j];
           }
@@ -76,7 +97,7 @@ export default function CrosswordPage() {
             definition,
             row,
             col,
-            direction: 'down',
+            direction: "down",
             revealed: false,
           });
           return;
@@ -104,54 +125,67 @@ export default function CrosswordPage() {
     });
 
     setPlacedWords(updated);
-    setInput('');
-    setGuessFeedback(found ? ' Correct!' : 'Incorrect guess.');
+    setInput("");
+    setGuessFeedback(found ? " Correct!" : "Incorrect guess.");
+    if (found) {
+      updateScore();
+    }
 
-    setTimeout(() => setGuessFeedback(''), 1500);
+    setTimeout(() => setGuessFeedback(""), 1500);
     if (updated.every((w) => w.revealed)) {
       setComplete(true);
     }
   };
 
   return (
-    <Background >
+    <Background>
       <h1 className="text-3xl font-bold text-white mb-10">Crossword Game</h1>
 
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
-        <div className='flex items-center flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 w-screen'>
-          <div className='bg-white/10 p-4 rounded  mr-5 shadow-lg shadow-gray-900/50 '>
-          <CrosswordGrid grid={grid} placedWords={placedWords}/>
+        <div className="flex items-center flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 w-screen">
+          <div className="bg-white/10 p-4 rounded  mr-5 shadow-lg shadow-gray-900/50 ">
+            <CrosswordGrid grid={grid} placedWords={placedWords} />
           </div>
           <div>
-          <Pontuation />
-          <CrosswordClues placedWords={placedWords} />
-          <CrosswordInput
-            input={input}
-            setInput={setInput}
-            onSubmit={handleGuess}
-            feedback={guessFeedback}
-          />
-          {complete && (
-            <div className="mt-6 flex flex-col items-center space-y-2">
-              <div className="text-green-400 font-bold text-xl">
-                You solved the crossword!
-              </div>
-              <button
-                onClick={() => {
-                  setGrid(null);
-                  setPlacedWords([]);
-                  setComplete(false);
-                  setInput('');
-                }}
-                className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800"
-              >
-                Play Again
-              </button>
+            <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex justify-center items-center shadow-lg shadow-gray-900/50 mb-5">
+              <h2 className="text-lg mb-2">Pontuation: {score}</h2>
             </div>
-          )}
+            <CrosswordClues placedWords={placedWords} />
+            <CrosswordInput
+              input={input}
+              setInput={setInput}
+              onSubmit={handleGuess}
+              feedback={guessFeedback}
+            />
+            {complete && (
+              <div className="mt-6 flex flex-col items-center space-y-2">
+                <div className="text-green-400 font-bold text-xl">
+                  You solved the crossword!
+                </div>
+                <button
+                  onClick={() => {
+                    setGrid(null);
+                    setPlacedWords([]);
+                    setComplete(false);
+                    setInput("");
+                  }}
+                  className="px-4 py-2 bg-blue-700 text-white rounded hover:bg-blue-800"
+                >
+                  Play Again
+                </button>
+              </div>
+            )}
           </div>
+          <button
+            className="px-4 py-2 bg-red-700 text-white rounded hover:bg-red-800 absolute bottom-4 right-4"
+            onClick={() => {
+              resetScore();
+            }}
+          >
+            resetScore
+          </button>
         </div>
       )}
     </Background>
