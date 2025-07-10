@@ -6,7 +6,6 @@ import CrosswordGrid from "../components/CrosswordGrid";
 import CrosswordClues from "../components/CrosswordClues";
 import CrosswordInput from "../components/CrosswordInput";
 import Background from "../components/Background";
-import Pontuation from "../components/Pontuation";
 
 type PlacedWord = {
   word: string;
@@ -38,9 +37,6 @@ export default function CrosswordPage() {
   };
   const resetScore = () => {
     setScore(0);
-  };
-  const getScore = () => {
-    return score;
   };
 
   const handleWordsReady = (words: { word: string; definition: string }[]) => {
