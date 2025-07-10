@@ -6,6 +6,7 @@ import CrosswordGrid from '../components/CrosswordGrid';
 import CrosswordClues from '../components/CrosswordClues';
 import CrosswordInput from '../components/CrosswordInput';
 import Background from '../components/Background';
+import Pontuation from '../components/Pontuation';
 
 type PlacedWord = {
   word: string;
@@ -124,6 +125,7 @@ export default function CrosswordPage() {
           <CrosswordGrid grid={grid} placedWords={placedWords}/>
           </div>
           <div>
+          <Pontuation />
           <CrosswordClues placedWords={placedWords} />
           <CrosswordInput
             input={input}
