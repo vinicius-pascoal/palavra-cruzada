@@ -2,10 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-// adapatar para servir como contador de pontuacao usando localStorage
-// e salvar a pontuacao no localStorage
-// e carregar a pontuacao do localStorage quando o componente for montado
-// e atualizar a pontuacao quando o usuario acertar uma palavra
 const Pontuation = () => {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
