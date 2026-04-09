@@ -40,6 +40,10 @@ export default function CrosswordPage() {
   };
 
   const handleWordsReady = (words: { word: string; definition: string }[]) => {
+    if (words.length === 0) {
+      return;
+    }
+
     const size = 15;
     const newGrid = Array(size)
       .fill(null)

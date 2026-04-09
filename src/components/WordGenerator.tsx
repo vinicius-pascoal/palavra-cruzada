@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 type WordDefinition = {
@@ -14,11 +14,16 @@ type Props = {
 };
 
 const WordGenerator = ({ onReady, count = 5 }: Props) => {
+  const [error, setError] = useState('');
+
   useEffect(() => {
     const fetchWords = async () => {
       const collected: WordDefinition[] = [];
+      const maxAttempts = count * 10;
+      let attempts = 0;
 
-      while (collected.length < count) {
+      while (collected.length < count && attempts < maxAttempts) {
+        attempts += 1;
         try {
           const res = await axios.get('https://random-word-api.herokuapp.com/word?number=1');
           const word = res.data[0];
@@ -40,11 +45,20 @@ const WordGenerator = ({ onReady, count = 5 }: Props) => {
         }
       }
 
+      if (collected.length === 0) {
+        setError('Não foi possível carregar as palavras agora. Atualize a página para tentar novamente.');
+        return;
+      }
+
       onReady(collected);
     };
 
     fetchWords();
   }, [onReady, count]);
+
+  if (error) {
+    return <div className="text-red-300 text-base md:text-lg text-center">{error}</div>;
+  }
 
   return <div className="text-gray-300 text-base md:text-lg animate-pulse text-center">Loading crossword ...</div>;
 };
