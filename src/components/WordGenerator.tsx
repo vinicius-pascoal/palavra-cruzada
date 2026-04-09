@@ -46,7 +46,7 @@ const WordGenerator = ({ onReady, count = 5 }: Props) => {
     fetchWords();
   }, [onReady, count]);
 
-  return <div className="text-gray-300 text-lg animate-pulse text-center">Loading crossword ...</div>;
+  return <div className="text-gray-300 text-base md:text-lg animate-pulse text-center">Loading crossword ...</div>;
 };
 
 export default WordGenerator;

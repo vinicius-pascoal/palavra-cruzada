@@ -27,12 +27,12 @@ export default function CrosswordInput({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full rounded-l-lg border border-white/20 border-r-0 bg-white/90 px-3 py-2 text-base text-gray-800 placeholder:text-gray-500 outline-none focus:border-blue-300"
+          className="w-full rounded-l-lg border border-white/20 border-r-0 bg-white/90 px-3 py-2 text-sm md:text-base text-gray-800 placeholder:text-gray-500 outline-none focus:border-blue-300"
           placeholder="Guess..."
         />
         <button
           type="submit"
-          className="rounded-r-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-500"
+          className="rounded-r-lg bg-blue-600 px-4 py-2 text-sm md:text-base text-white transition-colors hover:bg-blue-500"
         >
           Submit
         </button>
@@ -40,7 +40,7 @@ export default function CrosswordInput({
       {feedback && (
         <motion.div
           style={{ color: feedback.includes("Correct") ? "green" : "red" }}
-          className="mt-2 text-base font-semibold"
+          className="mt-2 text-sm md:text-base font-semibold"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

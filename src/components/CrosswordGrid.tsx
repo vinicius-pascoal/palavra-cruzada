@@ -38,7 +38,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
             {grid[0].map((_, colIdx) => (
               <div
                 key={`col-${colIdx}`}
-                className="w-8 h-8 text-center text-xs text-white font-bold"
+                className="w-8 h-8 text-center text-[10px] md:text-xs text-white font-bold leading-8"
               >
                 {String.fromCharCode(65 + colIdx)}
               </div>
@@ -51,7 +51,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
             {hasLetters && (
               <div
                 key={`row-${r}`}
-                className="w-6 h-8 text-right pr-2 text-xs text-white font-bold"
+                className="w-6 h-8 text-right pr-2 text-[10px] md:text-xs text-white font-bold leading-8"
               >
                 {r + 1}
               </div>
@@ -79,7 +79,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
                     exit={{ scale: 0 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     className={clsx(
-                      "w-8 h-8 border text-center text-xl uppercase text-gray-600 flex items-center justify-center",
+                      "w-8 h-8 border text-center text-lg uppercase text-gray-600 flex items-center justify-center leading-none",
                       cell
                         ? match
                           ? "border-green-500 text-green-500"
