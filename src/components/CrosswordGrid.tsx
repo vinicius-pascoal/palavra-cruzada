@@ -47,7 +47,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
         )}
 
         {grid.map((row, r) => (
-          <>
+          <div key={`grid-row-${r}`} className="contents">
             {hasLetters && (
               <div
                 key={`row-${r}`}
@@ -92,7 +92,7 @@ export default function CrosswordGrid({ grid, placedWords }: Props) {
                 </AnimatePresence>
               );
             })}
-          </>
+          </div>
         ))}
       </div>
     </div>
