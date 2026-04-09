@@ -135,18 +135,22 @@ export default function CrosswordPage() {
 
   return (
     <Background>
-      <h1 className="text-3xl font-bold text-white mb-10">Crossword Game</h1>
+      <h1 className="text-3xl font-semibold tracking-wide text-white/95 mb-10">
+        Crossword Game
+      </h1>
 
       {!grid && <WordGenerator onReady={handleWordsReady} />}
 
       {grid && (
-        <div className="flex items-center flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-4 w-screen">
-          <div className="bg-white/10 p-4 rounded  mr-5 shadow-lg shadow-gray-900/50 ">
+        <div className="flex items-center flex-col md:flex-row justify-center gap-4 w-screen">
+          <div className="minimal-card rounded-xl p-4 md:p-5 mr-0 md:mr-4">
             <CrosswordGrid grid={grid} placedWords={placedWords} />
           </div>
-          <div>
-            <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex justify-center items-center shadow-lg shadow-gray-900/50 mb-5">
-              <h2 className="text-lg mb-2">Pontuation: {score}</h2>
+          <div className="w-full max-w-md">
+            <div className="minimal-card-soft rounded-xl p-4 text-center flex justify-center items-center mb-5">
+              <h2 className="text-lg font-medium tracking-wide text-white/90">
+                Pontuation: {score}
+              </h2>
             </div>
             <CrosswordClues placedWords={placedWords} />
             <CrosswordInput

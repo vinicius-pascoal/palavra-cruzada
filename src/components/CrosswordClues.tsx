@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function CrosswordClues({ placedWords }: { placedWords: any[] }) {
   return (
-    <div className="mb-6 w-full max-w-md text-left space-y-2 text-sm bg-white/10 p-4 rounded text-white shadow-lg shadow-gray-900/50 ">
-      <h2 className="font-semibold text-white mb-2">Clues:</h2>
+    <div className="minimal-card-soft mb-6 w-full max-w-md text-left space-y-2 text-sm rounded-xl p-4 text-white/90">
+      <h2 className="font-semibold text-white/95 mb-2 tracking-wide">Clues:</h2>
       {placedWords.map((w, i) => (
         <AnimatePresence key={i}>
           <motion.div
@@ -14,9 +14,12 @@ export default function CrosswordClues({ placedWords }: { placedWords: any[] }) 
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
-            className={clsx("p-1 rounded", w.revealed ? "text-green-400" : "text-white")}
+            className={clsx(
+              "rounded-md px-2 py-1.5 leading-relaxed",
+              w.revealed ? "text-emerald-300/95" : "text-white/90"
+            )}
           >
-            <span className="font-bold">
+            <span className="font-semibold text-white/95">
               {w.direction.toUpperCase()} {String.fromCharCode(65 + w.col)}
               {w.row + 1}
             </span>

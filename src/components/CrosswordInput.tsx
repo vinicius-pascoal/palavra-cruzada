@@ -16,10 +16,10 @@ export default function CrosswordInput({
   const isError = feedback.includes("Incorrect");
 
   return (
-    <div className="bg-white/10 p-4 rounded w-full max-w-md text-center flex flex-col items-center shadow-lg shadow-gray-900/50">
+    <div className="minimal-card-soft rounded-xl p-4 w-full max-w-md text-center flex flex-col items-center">
       <motion.form
         onSubmit={onSubmit}
-        className="flex "
+        className="flex w-full"
         animate={isError ? { x: [-5, 5, -5, 5, 0] } : { x: 0 }}
         transition={{ duration: 0.4 }}
       >
@@ -27,12 +27,12 @@ export default function CrosswordInput({
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="border border-gray-800 border-r-0 px-3 py-1 text-lg rounded-l"
+          className="w-full rounded-l-lg border border-white/20 border-r-0 bg-white/90 px-3 py-2 text-base text-gray-800 placeholder:text-gray-500 outline-none focus:border-blue-300"
           placeholder="Guess..."
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-1 rounded-r hover:bg-blue-700"
+          className="rounded-r-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-500"
         >
           Submit
         </button>
@@ -40,7 +40,7 @@ export default function CrosswordInput({
       {feedback && (
         <motion.div
           style={{ color: feedback.includes("Correct") ? "green" : "red" }}
-          className="mt-2 text-lg font-semibold"
+          className="mt-2 text-base font-semibold"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
