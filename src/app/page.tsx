@@ -183,12 +183,12 @@ export default function CrosswordPage() {
             )}
           </div>
           <button
-            className="px-4 py-2 bg-red-700 text-sm md:text-base text-white rounded hover:bg-red-800 absolute bottom-4 right-4"
+            className="absolute bottom-4 right-4 rounded-xl border border-red-300/35 bg-gradient-to-b from-red-500/85 to-red-700/85 px-4 py-2 text-sm md:text-base font-semibold tracking-wide text-white shadow-[0_10px_24px_-14px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:from-red-400/90 hover:to-red-600/90 hover:shadow-[0_14px_30px_-14px_rgba(127,29,29,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 active:translate-y-0"
             onClick={() => {
               resetScore();
             }}
           >
-            resetScore
+            Reset Score
           </button>
         </div>
       )}
