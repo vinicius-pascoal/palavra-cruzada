@@ -57,10 +57,10 @@ const WordGenerator = ({ onReady, count = 5 }: Props) => {
   }, [onReady, count]);
 
   if (error) {
-    return <div className="text-red-300 text-base md:text-lg text-center">{error}</div>;
+    return <div className="text-red-300 text-lg md:text-xl text-center leading-snug">{error}</div>;
   }
 
-  return <div className="text-gray-300 text-base md:text-lg animate-pulse text-center">Loading crossword ...</div>;
+  return <div className="text-gray-300 text-lg md:text-xl animate-pulse text-center leading-snug">Loading crossword ...</div>;
 };
 
 export default WordGenerator;

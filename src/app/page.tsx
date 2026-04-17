@@ -139,7 +139,7 @@ export default function CrosswordPage() {
 
   return (
     <Background>
-      <h1 className="mb-10 text-2xl md:text-3xl font-semibold tracking-normal leading-tight text-white/95">
+      <h1 className="mb-10 text-3xl md:text-4xl font-semibold tracking-wide leading-[1.05] text-white/95">
         Crossword Game
       </h1>
 
@@ -152,7 +152,7 @@ export default function CrosswordPage() {
           </div>
           <div className="w-full max-w-md">
             <div className="minimal-card-soft rounded-xl p-4 text-center flex justify-center items-center mb-5">
-              <h2 className="text-base md:text-lg font-medium tracking-normal text-white/90">
+              <h2 className="text-lg md:text-xl font-medium tracking-wide text-white/90 leading-tight">
                 Pontuation: {score}
               </h2>
             </div>
@@ -165,7 +165,7 @@ export default function CrosswordPage() {
             />
             {complete && (
               <div className="mt-6 flex flex-col items-center space-y-2">
-                <div className="text-green-400 font-bold text-lg md:text-xl leading-tight">
+                <div className="text-green-400 font-bold text-xl md:text-2xl leading-tight tracking-wide">
                   You solved the crossword!
                 </div>
                 <button
@@ -175,7 +175,7 @@ export default function CrosswordPage() {
                     setComplete(false);
                     setInput("");
                   }}
-                  className="px-4 py-2 bg-blue-700 text-sm md:text-base text-white rounded hover:bg-blue-800"
+                  className="px-4 py-2 bg-blue-700 text-base md:text-lg text-white rounded hover:bg-blue-800"
                 >
                   Play Again
                 </button>
@@ -183,7 +183,7 @@ export default function CrosswordPage() {
             )}
           </div>
           <button
-            className="absolute bottom-4 right-4 rounded-xl border border-red-300/35 bg-gradient-to-b from-red-500/85 to-red-700/85 px-4 py-2 text-sm md:text-base font-semibold tracking-wide text-white shadow-[0_10px_24px_-14px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:from-red-400/90 hover:to-red-600/90 hover:shadow-[0_14px_30px_-14px_rgba(127,29,29,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 active:translate-y-0"
+            className="absolute bottom-4 right-4 rounded-xl border border-red-300/35 bg-gradient-to-b from-red-500/85 to-red-700/85 px-4 py-2 text-base md:text-lg font-semibold tracking-[0.04em] text-white shadow-[0_10px_24px_-14px_rgba(0,0,0,0.85)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:from-red-400/90 hover:to-red-600/90 hover:shadow-[0_14px_30px_-14px_rgba(127,29,29,0.75)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-200/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 active:translate-y-0"
             onClick={() => {
               resetScore();
             }}
