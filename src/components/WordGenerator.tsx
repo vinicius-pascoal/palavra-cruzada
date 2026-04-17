@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 type WordDefinition = {
   word: string;
@@ -18,39 +17,26 @@ const WordGenerator = ({ onReady, count = 5 }: Props) => {
 
   useEffect(() => {
     const fetchWords = async () => {
-      const collected: WordDefinition[] = [];
-      const maxAttempts = count * 10;
-      let attempts = 0;
+      setError('');
 
-      while (collected.length < count && attempts < maxAttempts) {
-        attempts += 1;
-        try {
-          const res = await axios.get('https://random-word-api.herokuapp.com/word?number=1');
-          const word = res.data[0];
-          try {
-            const defRes = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-            const defs = defRes.data?.[0]?.meanings?.[0]?.definitions;
-
-            if (defs && defs.length > 0) {
-              collected.push({
-                word,
-                definition: defs[0].definition,
-              });
-            }
-          } catch (error) {
-            console.log(`No definition found for word: ${word}`);
-          }
-        } catch {
-          console.error('Error fetching word from API');
+      try {
+        const res = await fetch(`/api/words?count=${count}`, { cache: 'no-store' });
+        if (!res.ok) {
+          throw new Error('Failed to load words');
         }
-      }
 
-      if (collected.length === 0) {
+        const data = (await res.json()) as { words?: WordDefinition[] };
+        const words = data.words ?? [];
+
+        if (words.length === 0) {
+          setError('Não foi possível carregar as palavras agora. Atualize a página para tentar novamente.');
+          return;
+        }
+
+        onReady(words);
+      } catch {
         setError('Não foi possível carregar as palavras agora. Atualize a página para tentar novamente.');
-        return;
       }
-
-      onReady(collected);
     };
 
     fetchWords();
